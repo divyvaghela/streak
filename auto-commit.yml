@@ -1,0 +1,24 @@
+name: Auto Commit Streak
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update log file
+        run: |
+          date >> streak.log
+          git config --global user.name 'GitHub Action Bot'
+          git config --global user.email 'action@github.com'
+          git add streak.log
+          git commit -m "Automated streak update: $(date +'%Y-%m-%d')"
+          git push
